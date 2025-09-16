@@ -23,31 +23,40 @@ class ChatPage extends Component
 
     public function sendMessage(): void
     {
-        $this->validate(['message' => 'required|string']);
-        $this->chatHistory[] = [
-            'role' => 'user',
-            'content' => $this->message,
-        ];
-        $this->isTyping = true;
+        try {
+            $this->validate(['message' => 'required|string']);
+            // Add test message
+            $this->chatHistory[] = [
+                'role' => 'user',
+                'content' => $this->message,
+            ];
+            $this->isTyping = true;
+
+            // $this->getAgentInstance()->respond($this->message);
+            // $this->setHistoryFromAgent();
+
+            // Simulate latency
+            sleep(1);
+
+            // Add test response
+            $this->chatHistory[] = [
+                'role' => 'assistant',
+                'content' => 'Test message from LarAgent.',
+            ];
+        } catch (\Exception $e) {
+            $this->isTyping = false;
+            $this->dispatch('notify', type: 'error', message: $e->getMessage());
+        }
         $this->reset('message');
-        // Simulate latency
-        sleep(1);
-        $this->chatHistory[] = [
-            'role' => 'assistant',
-            'content' => 'Test message from LarAgent.',
-        ];
-        $this->isTyping = false;
     }
 
     public function clearHistory(): void
     {
         // $this->getAgentInstance()->clear();
-        $this->chatHistory = [
-            [
-                'role' => 'system',
-                'content' => "Name yourself on every response, for example: 'I, Model [X] created by [Y], sending respond: [response]'"
-            ]
-        ];
+        // $this->setHistoryFromAgent();
+
+        // For now, keep empty
+        $this->chatHistory = [];
     }
 
     public function getChatHistory(): array
