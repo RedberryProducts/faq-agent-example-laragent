@@ -32,7 +32,7 @@
                         <strong class="font-mono uppercase text-gray-500">{{ $message['role'] }}:</strong>
                         <p class="mt-1 font-sans">
                             @if(isset($message['content']))
-                                {{ $message['content'] }}
+                                {{ $message['content'][0]['text'] ?? $message['content'] }}
                             @else
                                 {{ json_encode($message, JSON_PRETTY_PRINT) }}
                             @endif
@@ -46,13 +46,13 @@
                 @if ($msg['role'] === 'user')
                     <div class="w-full flex justify-end">
                         <div class="max-w-lg px-4 py-2 rounded-lg shadow bg-blue-500 text-white">
-                            {{ $msg['content'] }}
+                            {{ $msg['content'][0]['text'] ?? $msg['content'] }}
                         </div>
                     </div>
                 @elseif ($msg['role'] === 'assistant')
                     <div class="w-full flex justify-start">
                         <div class="max-w-lg px-4 py-2 rounded-lg shadow bg-white text-gray-800 border">
-                            {{ $msg['content'] }}
+                            {!! nl2br($msg['content'][0]['text'] ?? $msg['content']) !!}
                         </div>
                     </div>
                 @endif

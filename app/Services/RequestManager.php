@@ -12,6 +12,6 @@ class RequestManager
 	public static function send($chatHistory, string $email): string
 	{
 		// Here you would handle the request logic
-		return 'Request sent to manager';
+		return 'Request sent to manager and will contact you at ' . $email . ' shortly.';
 	}
 }

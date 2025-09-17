@@ -10,6 +10,7 @@ class TestUser
 	{
 		$user = new User();
 		$user->email = 'JohnDoe@email.com';
+		$user->name = 'John Doe';
 		return $user;
 	}
 }

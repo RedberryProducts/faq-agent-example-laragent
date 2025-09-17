@@ -3,6 +3,8 @@
 namespace App\Livewire;
 
 use Livewire\Component;
+use App\AiAgents\SupportAgent;
+use App\AiAgents\GuardAgent;
 
 class ChatPage extends Component
 {
@@ -14,7 +16,8 @@ class ChatPage extends Component
     ];
     public ?string $message = '';
     public bool $isTyping = false;
-    protected ?string $agent = null;
+
+    protected ?string $agent = SupportAgent::class;
 
     public function mount(): void
     {
@@ -25,24 +28,11 @@ class ChatPage extends Component
     {
         try {
             $this->validate(['message' => 'required|string']);
-            // Add test message
-            $this->chatHistory[] = [
-                'role' => 'user',
-                'content' => $this->message,
-            ];
+
             $this->isTyping = true;
 
-            // $this->getAgentInstance()->respond($this->message);
-            // $this->setHistoryFromAgent();
-
-            // Simulate latency
-            sleep(1);
-
-            // Add test response
-            $this->chatHistory[] = [
-                'role' => 'assistant',
-                'content' => 'Test message from LarAgent.',
-            ];
+            $this->getAgentInstance()->respond($this->message);
+            $this->setHistoryFromAgent();
         } catch (\Exception $e) {
             $this->isTyping = false;
             $this->dispatch('notify', type: 'error', message: $e->getMessage());
@@ -52,11 +42,8 @@ class ChatPage extends Component
 
     public function clearHistory(): void
     {
-        // $this->getAgentInstance()->clear();
-        // $this->setHistoryFromAgent();
-
-        // For now, keep empty
-        $this->chatHistory = [];
+        $this->getAgentInstance()->clear();
+        $this->setHistoryFromAgent();
     }
 
     public function getChatHistory(): array
@@ -71,20 +58,13 @@ class ChatPage extends Component
 
     protected function getAgentInstance()
     {
-        // return $this->agent::forUser(auth()->user());
-        return null;
+        $session = auth()->user() ? auth()->user()->id : session()->getId();
+        return $this->agent::for($session);
     }
 
     protected function setHistoryFromAgent(): void
     {
-        // $this->chatHistory = $this->getAgentInstance()->chatHistory()->toArray();
-        // For now, keep default system message
-        $this->chatHistory = [
-            [
-                'role' => 'system',
-                'content' => "Name yourself on every response, for example: 'I, Model [X] created by [Y], sending respond: [response]'"
-            ]
-        ];
+        $this->chatHistory = $this->getAgentInstance()->chatHistory()->toArray();
     }
 
     public function render()

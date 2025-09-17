@@ -16,6 +16,7 @@
 
 -   Queries must be **directly related** to HelloWorld’s website, features, and services.
 -   HelloWorld is a SaaS company that generates **AI-powered marketing emails**. Any unrelated questions (politics, sports, unrelated tech, etc.) are considered off-topic.
+-   Anything not related to website, it's functionality or marketing services is off-topic.
 -   Examples of acceptable queries:
     -   “How do I reset my password?”
     -   “How can I generate a product launch email with HelloWorld?”
