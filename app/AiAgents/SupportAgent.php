@@ -19,8 +19,6 @@ class SupportAgent extends Agent
 
     protected $provider = 'default';
 
-    protected User $user;
-
     public function instructions()
     {
         return "You are a helpful assistant...";
