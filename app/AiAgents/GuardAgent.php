@@ -30,4 +30,11 @@ class GuardAgent extends Agent
         return $message;
     }
 
+    #[Tool('Indicate that a rule has been violated. Use only when a rule is violated.')]
+    public static function violationDetected(RuleViolation $rule, string $comment): string
+    {
+        Log::warning("Rule violated: {$rule->value}. Comment: {$comment}");
+        throw new ViolationException($rule);
+    }
+
 }

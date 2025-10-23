@@ -19,13 +19,37 @@ class SupportAgent extends Agent
 
     protected $provider = 'default';
 
+    protected User $user;
+
     public function instructions()
     {
-        return "You are a helpful assistant...";
+        return view("prompts.support_agent_instructions", 
+        [
+            'date' => now()->toDateTimeString(),
+            'user' => $this->user,
+        ])->render();
     }
 
     public function prompt($message)
     {
+        $docsId = RetrievalAgent::for("return_ids")->respond($message);
+        $docs = Document::whereIn('id', $docsId['document_ids'])->get();
+        $devMsg = new DeveloperMessage(view('prompts.support_agent_context', [
+            'documents' => $docs,
+        ])->render());
+        $this->chatHistory()->addMessage($devMsg);
+
         return $message;
     }
+
+    protected function onInitialize()
+    {
+        $this->user = TestUser::get();
+    }
+
+    #[Tool('Request contact to manager. Use only when explicitly requested to contact to manager')]
+    public function requestContactToManager() {
+        return RequestManager::send($this->chatHistory(), $this->user->email);
+    }
+
 }

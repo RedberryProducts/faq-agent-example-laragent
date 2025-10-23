@@ -29,6 +29,8 @@ class ChatPage extends Component
         try {
             $this->validate(['message' => 'required|string']);
 
+            GuardAgent::for('check_message')->respond($this->message);
+
             $this->isTyping = true;
 
             $this->getAgentInstance()->respond($this->message);
