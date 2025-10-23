@@ -52,7 +52,15 @@
                 @elseif ($msg['role'] === 'assistant')
                     <div class="w-full flex justify-start">
                         <div class="max-w-lg px-4 py-2 rounded-lg shadow bg-white text-gray-800 border">
-                            {!! nl2br($msg['content'][0]['text'] ?? $msg['content']) !!}
+                            @if(isset($msg['content'][0]['text']))
+                                {!! nl2br($msg['content'][0]['text']) !!}
+                            @elseif(isset($msg['content']) && !empty($msg['content']))
+                                {!! nl2br($msg['content']) !!}
+                            @elseif(isset($msg['tool_calls']))
+                                <span class="font-mono text-gray-500">Tool Call:</span> {{ $msg['tool_calls'][0]['function']['name'] }}
+                            @else
+                                Assistant response could not be rendered.
+                            @endif
                         </div>
                     </div>
                 @endif
